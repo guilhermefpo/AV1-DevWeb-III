@@ -14,56 +14,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.entidades.Cliente;
-import com.autobots.automanager.modelo.ClienteAtualizador;
-import com.autobots.automanager.modelo.ClienteSelecionador;
-import com.autobots.automanager.repositorios.ClienteRepositorio;
+import com.autobots.automanager.dtos.ClienteDTO;
+import com.autobots.automanager.servicos.ClienteServicos;
 
 @RestController
 @RequestMapping("/cliente")
 public class ClienteControle {
+
 	@Autowired
-	private ClienteRepositorio repositorio;
-	@Autowired
-	private ClienteSelecionador selecionador;
+	private ClienteServicos servicos;
 
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Cliente obterCliente(@PathVariable long id) {
-		List<Cliente> clientes = repositorio.findAll();
-		return selecionador.selecionar(clientes, id);
+	public ClienteDTO obterCliente(@PathVariable("id") long id) {
+		return servicos.buscarPorId(id);
 	}
 
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<Cliente> obterClientes() {
-		List<Cliente> clientes = repositorio.findAll();
-		return clientes;
+	public List<ClienteDTO> obterClientes() {
+		return servicos.buscarClientes();
 	}
 
-	@SuppressWarnings("null")
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public ClienteDTO cadastrarCliente(@RequestBody ClienteDTO clienteDto) {
+		return servicos.cadastrarCliente(clienteDto);
+	}
+
+	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public void cadastrarCliente(@RequestBody Cliente cliente) {
-		repositorio.save(cliente);
+	public ClienteDTO atualizarCliente(@PathVariable("id") long id, @RequestBody ClienteDTO atualizacao) {
+		return servicos.atualizarCliente(id, atualizacao);
 	}
 
 	@SuppressWarnings("null")
-	@PutMapping
-	@ResponseStatus(HttpStatus.OK)
-	public void atualizarCliente(@RequestBody Cliente atualizacao) {
-		Cliente cliente = repositorio.getById(atualizacao.getId());
-		ClienteAtualizador atualizador = new ClienteAtualizador();
-		atualizador.atualizar(cliente, atualizacao);
-		repositorio.save(cliente);
-	}
-
-	@SuppressWarnings("null")
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void excluirCliente(@RequestBody Cliente exclusao) {
-		Cliente cliente = repositorio.getById(exclusao.getId());
-		repositorio.delete(cliente);
+	public void excluirCliente(@PathVariable("id") long id) {
+		servicos.excluirCliente(id);
 	}
 
 }

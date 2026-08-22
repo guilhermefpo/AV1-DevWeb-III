@@ -1,5 +1,10 @@
 package com.autobots.automanager.dtos;
 
-public class DocumentoDTO {
+import lombok.Data;
 
+@Data
+public class DocumentoDTO {
+    private Long id;
+    private String tipo;
+    private String numero;
 }

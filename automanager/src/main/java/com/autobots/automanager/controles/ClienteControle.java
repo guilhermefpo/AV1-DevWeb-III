@@ -27,14 +27,14 @@ public class ClienteControle {
 	@Autowired
 	private ClienteSelecionador selecionador;
 
-	@GetMapping("/cliente/{id}")
+	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Cliente obterCliente(@PathVariable long id) {
 		List<Cliente> clientes = repositorio.findAll();
 		return selecionador.selecionar(clientes, id);
 	}
 
-	@GetMapping("/clientes")
+	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<Cliente> obterClientes() {
 		List<Cliente> clientes = repositorio.findAll();
@@ -42,14 +42,14 @@ public class ClienteControle {
 	}
 
 	@SuppressWarnings("null")
-	@PostMapping("/cadastro")
+	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
 	public void cadastrarCliente(@RequestBody Cliente cliente) {
 		repositorio.save(cliente);
 	}
 
 	@SuppressWarnings("null")
-	@PutMapping("/atualizar")
+	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	public void atualizarCliente(@RequestBody Cliente atualizacao) {
 		Cliente cliente = repositorio.getById(atualizacao.getId());
@@ -59,7 +59,7 @@ public class ClienteControle {
 	}
 
 	@SuppressWarnings("null")
-	@DeleteMapping("/excluir")
+	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluirCliente(@RequestBody Cliente exclusao) {
 		Cliente cliente = repositorio.getById(exclusao.getId());

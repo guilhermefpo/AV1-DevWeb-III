@@ -1,19 +1,29 @@
 # AutoManager
 
-> Projeto AV1 Dev Web inicio dos trabalhos.
+> Projeto AV1 Dev Web — Início dos trabalhos.
 
-# Documentação da API - Gerenciamento de Clientes
+## Documentação da API
 
-Esta seção detalha os endpoints disponíveis no controller `ClienteControle` para a gestão de clientes na aplicação **AutoManager**.
+### 1. Clientes (`/cliente`)
 
-## Rotas Mapeadas
+| Método     | Endpoint        | Status | Descrição               |
+| :--------- | :-------------- | :----- | :---------------------- |
+| **GET**    | `/cliente`      | `200`  | Lista todos os clientes |
+| **GET**    | `/cliente/{id}` | `200`  | Busca cliente por ID    |
+| **POST**   | `/cliente`      | `201`  | Cadastra novo cliente   |
+| **PUT**    | `/cliente/{id}` | `200`  | Atualiza cliente        |
+| **DELETE** | `/cliente/{id}` | `204`  | Remove cliente          |
 
-| Método HTTP | Endpoint        | Status HTTP      | Descrição                                           | Corpo da Requisição (Payload) | Resposta           |
-| :---------- | :-------------- | :--------------- | :-------------------------------------------------- | :---------------------------- | :----------------- |
-| **GET**     | `/cliente`      | `200 OK`         | Retorna a lista de todos os clientes cadastrados.   | _Nenhum_                      | `List<ClienteDTO>` |
-| **GET**     | `/cliente/{id}` | `200 OK`         | Busca os detalhes de um cliente específico pelo ID. | _Nenhum_                      | `ClienteDTO`       |
-| **POST**    | `/cliente`      | `201 CREATED`    | Cadastra um novo cliente no sistema.                | `ClienteDTO`                  | `ClienteDTO`       |
-| **PUT**     | `/cliente/{id}` | `200 OK`         | Atualiza os dados de um cliente existente pelo ID.  | `ClienteDTO`                  | `ClienteDTO`       |
-| **DELETE**  | `/cliente/{id}` | `204 NO CONTENT` | Remove um cliente do sistema pelo ID.               | _Nenhum_                      | _Nenhum_           |
+---
 
-> **Nota:** Certifique-se de ajustar a anotação dos métodos http no Softwere de requisições de sua preferência.
+### 2. Documentos (`/documento`)
+
+| Método     | Endpoint          | Status | Descrição                 |
+| :--------- | :---------------- | :----- | :------------------------ |
+| **GET**    | `/documento`      | `200`  | Lista todos os documentos |
+| **GET**    | `/documento/{id}` | `200`  | Busca documento por ID    |
+| **POST**   | `/documento`      | `201`  | Cadastra novo documento   |
+| **PUT**    | `/documento/{id}` | `200`  | Atualiza documento        |
+| **DELETE** | `/documento/{id}` | `204`  | Remove documento          |
+
+> **Nota:** Certifique-se de informar corretamente os parâmetros de caminho (`{id}`) e o formato do payload em JSON no software de testes de requisições de sua preferência (ex: Postman, Insomnia ou Swagger).

@@ -6,13 +6,11 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.autobots.automanager.dtos.ClienteDTO;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
 import com.autobots.automanager.modelo.ClienteAtualizador;
-import com.autobots.automanager.modelo.ClienteExcluidor;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 
 @Service
@@ -23,9 +21,6 @@ public class ClienteServicos {
 
     @Autowired
     private ClienteAtualizador atualizador;
-
-    @Autowired
-    private ClienteExcluidor excluidor;
 
     @Autowired
     private ModelMapper modelMapper;

@@ -2,6 +2,42 @@
 
 > **Projeto AV1 Dev Web — Início dos trabalhos.**
 
+## Passos para utilizar o Microsserviço
+
+### 1. Clonar o repositório
+
+Clone o repositório do projeto utilizando o comando:
+
+```bash
+git clone https://github.com/guilhermefpo/AV1-DevWeb-III.git
+```
+
+### 2. Acessar a pasta do projeto
+
+Entre no diretório do projeto:
+
+```bash
+cd automanager
+```
+
+### 3. Executar o projeto
+
+Inicie a aplicação Spring Boot com o Maven Wrapper:
+
+```bash
+.\mvnw.cmd spring-boot:run
+```
+
+Após a inicialização, aguarde até que a aplicação esteja disponível para receber requisições.
+
+### 4. Utilizar a API
+
+Com o microsserviço em execução, utilize as **rotas e requisições da API** para realizar os testes.
+
+Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramenta de sua preferência para enviar as requisições HTTP.
+
+> **💡 Obs:** Verifique a documentação das rotas da API para saber quais endpoints estão disponíveis, quais métodos HTTP devem ser utilizados e quais dados devem ser enviados nas requisições.
+
 ## Documentação da API
 
 ### 1. Clientes (`/cliente`)
@@ -24,32 +60,7 @@
   "nome": "João da Silva",
   "nomeSocial": "João",
   "dataNascimento": "1990-05-15T00:00:00.000+00:00",
-  "dataCadastro": "2026-08-24T00:00:00.000+00:00",
-  "endereco": {
-    "estado": "SP",
-    "cidade": "São José dos Campos",
-    "bairro": "Centro",
-    "rua": "Avenida Central",
-    "numero": "123",
-    "codigoPostal": "12200-000",
-    "informacoesAdicionais": "Apto 42"
-  },
-  "documentos": [
-    {
-      "tipo": "CPF",
-      "numero": "12345678901"
-    },
-    {
-      "tipo": "RG",
-      "numero": "987654321"
-    }
-  ],
-  "telefones": [
-    {
-      "ddd": "12",
-      "numero": "999998888"
-    }
-  ]
+  "dataCadastro": "2026-08-24T00:00:00.000+00:00"
 }
 ```
 
@@ -66,31 +77,7 @@
   "nome": "João da Silva Sauro",
   "nomeSocial": "João",
   "dataNascimento": "1990-05-15T00:00:00.000+00:00",
-  "dataCadastro": "2026-08-24T00:00:00.000+00:00",
-  "endereco": {
-    "id": 2,
-    "estado": "SP",
-    "cidade": "São José dos Campos",
-    "bairro": "Jardim das Indústrias",
-    "rua": "Rua das Flores",
-    "numero": "456",
-    "codigoPostal": "12230-000",
-    "informacoesAdicionais": "Bloco B"
-  },
-  "documentos": [
-    {
-      "id": 2,
-      "tipo": "CPF",
-      "numero": "12345678901"
-    }
-  ],
-  "telefones": [
-    {
-      "id": 2,
-      "ddd": "12",
-      "numero": "988887777"
-    }
-  ]
+  "dataCadastro": "2026-08-24T00:00:00.000+00:00"
 }
 ```
 
@@ -232,5 +219,3 @@
 ---
 
 > **Nota:** Certifique-se de informar corretamente os parâmetros de caminho (`{id}`) e o formato do payload em JSON no software de testes de requisições de sua preferência, como Postman, Insomnia ou Swagger.
->
-> Caso ocorra algum erro no terminal, adicione `/automager` antes do endpoint.

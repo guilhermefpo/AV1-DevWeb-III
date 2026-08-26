@@ -15,43 +15,43 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.dtos.EnderecoDTO;
-import com.autobots.automanager.servicos.EnderecoService;
+import com.autobots.automanager.servicos.EnderecoServicos;
 
 @RestController
 @RequestMapping("/endereco")
 public class EnderecoControle {
 
     @Autowired
-    private EnderecoService service;
+    private EnderecoServicos servicos;
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EnderecoDTO obterEndereco(@PathVariable("id") long id) {
-        return service.buscarPorId(id);
+        return servicos.buscarPorId(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<EnderecoDTO> obterEnderecos() {
-        return service.buscarEnderecos();
+        return servicos.buscarEnderecos();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EnderecoDTO cadastrarEndereco(@RequestBody EnderecoDTO enderecoDto) {
-        return service.cadastrarEndereco(enderecoDto);
+        return servicos.cadastrarEndereco(enderecoDto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EnderecoDTO atualizarEndereco(@PathVariable("id") long id, @RequestBody EnderecoDTO atualizacao) {
-        return service.atualizarEndereco(id, atualizacao);
+        return servicos.atualizarEndereco(id, atualizacao);
     }
 
     @SuppressWarnings("null")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluirEndereco(@PathVariable("id") long id) {
-        service.excluirEndereco(id);
+        servicos.excluirEndereco(id);
     }
 }

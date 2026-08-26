@@ -14,7 +14,7 @@ import com.autobots.automanager.modelo.TelefoneAtualizador;
 import com.autobots.automanager.repositorios.TelefoneRepositorio;
 
 @Service
-public class TelefoneService {
+public class TelefoneServicos {
 
     @Autowired
     private TelefoneRepositorio repositorio;

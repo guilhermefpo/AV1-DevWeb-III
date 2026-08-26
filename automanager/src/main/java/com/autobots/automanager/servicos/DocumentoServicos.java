@@ -14,7 +14,7 @@ import com.autobots.automanager.modelo.DocumentoAtualizador;
 import com.autobots.automanager.repositorios.DocumentoRepositorio;
 
 @Service
-public class DocumentoService {
+public class DocumentoServicos {
     @Autowired
     private DocumentoRepositorio repositorio;
 

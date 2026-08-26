@@ -15,31 +15,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.dtos.TelefoneDTO;
-import com.autobots.automanager.servicos.TelefoneService;
+import com.autobots.automanager.servicos.TelefoneServicos;
 
 @RestController
 @RequestMapping("/telefone")
 public class TelefoneControle {
 
     @Autowired
-    private TelefoneService service;
+    private TelefoneServicos servicos;
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TelefoneDTO obterTelefone(@PathVariable("id") long id) {
-        return service.buscarPorId(id);
+        return servicos.buscarPorId(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<TelefoneDTO> obterTelefones() {
-        return service.buscarTelefones();
+        return servicos.buscarTelefones();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TelefoneDTO cadastrarTelefone(@RequestBody TelefoneDTO telefoneDto) {
-        return service.cadastrarTelefone(telefoneDto);
+        return servicos.cadastrarTelefone(telefoneDto);
     }
 
     @PutMapping("/{id}")
@@ -48,12 +48,12 @@ public class TelefoneControle {
             @PathVariable("id") long id,
             @RequestBody TelefoneDTO atualizacao) {
 
-        return service.atualizarTelefone(id, atualizacao);
+        return servicos.atualizarTelefone(id, atualizacao);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluirTelefone(@PathVariable("id") long id) {
-        service.excluirTelefone(id);
+        servicos.excluirTelefone(id);
     }
 }

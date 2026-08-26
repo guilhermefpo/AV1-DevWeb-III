@@ -15,42 +15,42 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.dtos.DocumentoDTO;
-import com.autobots.automanager.servicos.DocumentoService;
+import com.autobots.automanager.servicos.DocumentoServicos;
 
 @RestController
 @RequestMapping("/documento")
 public class DocumentoControle {
     @Autowired
-    private DocumentoService service;
+    private DocumentoServicos servicos;
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DocumentoDTO buscarDocumento(@PathVariable("id") long id) {
-        return service.buscarPorId(id);
+        return servicos.buscarPorId(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<DocumentoDTO> obterDocumentos() {
-        return service.buscarDocumentos();
+        return servicos.buscarDocumentos();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DocumentoDTO cadastrarDocumento(@RequestBody DocumentoDTO documentoDTO) {
-        return service.cadastrarDocumento(documentoDTO);
+        return servicos.cadastrarDocumento(documentoDTO);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DocumentoDTO atualizarDocumento(@PathVariable("id") long id, @RequestBody DocumentoDTO novosDados) {
-        return service.atualizarDocumento(id, novosDados);
+        return servicos.atualizarDocumento(id, novosDados);
     }
 
     @SuppressWarnings("null")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluirCliente(@PathVariable("id") long id) {
-        service.excluirDocumento(id);
+        servicos.excluirDocumento(id);
     }
 }

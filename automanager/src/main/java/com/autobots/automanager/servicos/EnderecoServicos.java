@@ -14,7 +14,7 @@ import com.autobots.automanager.modelo.EnderecoAtualizador;
 import com.autobots.automanager.repositorios.EnderecoRepositorio;
 
 @Service
-public class EnderecoService {
+public class EnderecoServicos {
 
   @Autowired
   private EnderecoRepositorio repositorio;

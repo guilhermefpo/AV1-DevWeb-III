@@ -36,10 +36,10 @@ public class EnderecoControle {
         return servicos.buscarEnderecos();
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public EnderecoDTO cadastrarEndereco(@RequestBody EnderecoDTO enderecoDto) {
-        return servicos.cadastrarEndereco(enderecoDto);
+    public EnderecoDTO cadastrarEndereco(@RequestBody EnderecoDTO enderecoDto, @PathVariable("id") long id) {
+        return servicos.cadastrarEndereco(enderecoDto, id);
     }
 
     @PutMapping("/{id}")

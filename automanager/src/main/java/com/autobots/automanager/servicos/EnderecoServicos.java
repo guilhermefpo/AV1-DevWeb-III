@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.dtos.EnderecoDTO;
+import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Endereco;
+import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
 import com.autobots.automanager.excecoes.EnderecoNaoEncontradoException;
 import com.autobots.automanager.modelo.EnderecoAtualizador;
+import com.autobots.automanager.repositorios.ClienteRepositorio;
 import com.autobots.automanager.repositorios.EnderecoRepositorio;
 
 @Service
@@ -18,6 +21,9 @@ public class EnderecoServicos {
 
   @Autowired
   private EnderecoRepositorio repositorio;
+
+  @Autowired
+  private ClienteRepositorio clienteRepositorio;
 
   @Autowired
   private EnderecoAtualizador atualizador;
@@ -56,13 +62,18 @@ public class EnderecoServicos {
     return modelMapper.map(enderecoSalvo, EnderecoDTO.class);
   }
 
-  public EnderecoDTO cadastrarEndereco(EnderecoDTO novoEndereco) {
+  public EnderecoDTO cadastrarEndereco(EnderecoDTO novoEndereco, long id) {
+
+    Cliente cliente = clienteRepositorio.findById(id)
+        .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+
     Endereco endereco = modelMapper.map(novoEndereco, Endereco.class);
 
-    @SuppressWarnings("null")
-    Endereco enderecoSalvo = repositorio.save(endereco);
+    cliente.setEndereco(endereco);
 
-    return modelMapper.map(enderecoSalvo, EnderecoDTO.class);
+    clienteRepositorio.save(cliente);
+
+    return modelMapper.map(endereco, EnderecoDTO.class);
   }
 
   public void excluirEndereco(long id) {

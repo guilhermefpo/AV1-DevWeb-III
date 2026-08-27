@@ -13,8 +13,8 @@ public class ClienteDTO {
     private String nomeSocial;
     private Date dataNascimento;
     private Date dataCadastro;
-
     private EnderecoDTO endereco;
+
     private List<DocumentoDTO> documentos = new ArrayList<>();
     private List<TelefoneDTO> telefones = new ArrayList<>();
 }

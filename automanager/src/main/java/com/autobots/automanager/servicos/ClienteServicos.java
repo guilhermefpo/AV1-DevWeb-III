@@ -50,6 +50,11 @@ public class ClienteServicos {
 
         atualizador.atualizar(cliente, dadosNovos);
 
+        if (cliente.getEndereco() != null) {
+            // Se na entidade Endereco houver o campo cliente, descomente a linha abaixo:
+            // cliente.getEndereco().setCliente(cliente);
+        }
+
         @SuppressWarnings("null")
         Cliente clienteSalvo = repositorio.save(cliente);
 

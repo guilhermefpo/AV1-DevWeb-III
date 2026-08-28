@@ -77,10 +77,15 @@ public class EnderecoServicos {
   }
 
   public void excluirEndereco(long id) {
-    Endereco endereco = repositorio.findById(id)
+    Cliente cliente = clienteRepositorio.findAll().stream()
+        .filter(c -> c.getEndereco() != null
+            && c.getEndereco().getId().equals(id))
+        .findFirst()
         .orElseThrow(() -> new EnderecoNaoEncontradoException(id));
 
-    repositorio.delete(endereco);
+    cliente.setEndereco(null);
 
+    clienteRepositorio.save(cliente);
   }
+
 }

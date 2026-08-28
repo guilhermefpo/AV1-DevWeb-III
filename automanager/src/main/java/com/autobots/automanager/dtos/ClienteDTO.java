@@ -1,6 +1,5 @@
 package com.autobots.automanager.dtos;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +13,6 @@ public class ClienteDTO {
     private Date dataNascimento;
     private Date dataCadastro;
     private EnderecoDTO endereco;
-
-    private List<DocumentoDTO> documentos = new ArrayList<>();
-    private List<TelefoneDTO> telefones = new ArrayList<>();
+    private List<DocumentoDTO> documentos;
+    private List<TelefoneDTO> telefones;
 }

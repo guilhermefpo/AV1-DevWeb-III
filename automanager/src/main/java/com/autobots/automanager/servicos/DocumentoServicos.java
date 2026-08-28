@@ -8,15 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.dtos.DocumentoDTO;
+import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
+import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
 import com.autobots.automanager.excecoes.DocumentoNaoEncontradoException;
 import com.autobots.automanager.modelo.DocumentoAtualizador;
+import com.autobots.automanager.repositorios.ClienteRepositorio;
 import com.autobots.automanager.repositorios.DocumentoRepositorio;
 
 @Service
 public class DocumentoServicos {
     @Autowired
     private DocumentoRepositorio repositorio;
+
+    @Autowired
+    private ClienteRepositorio clienteRepositorio;
 
     @Autowired
     private DocumentoAtualizador atualizador;
@@ -54,18 +60,33 @@ public class DocumentoServicos {
         return modelMapper.map(documentoSalvo, DocumentoDTO.class);
     }
 
-    public DocumentoDTO cadastrarDocumento(DocumentoDTO novoDocumento) {
+    public DocumentoDTO cadastrarDocumento(DocumentoDTO novoDocumento, long id) {
+
+        Cliente cliente = clienteRepositorio.findById(id)
+                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+
         Documento documento = modelMapper.map(novoDocumento, Documento.class);
 
-        @SuppressWarnings("null")
-        Documento documentoSalvo = repositorio.save(documento);
+        cliente.getDocumentos().add(documento);
 
-        return modelMapper.map(documentoSalvo, DocumentoDTO.class);
+        clienteRepositorio.save(cliente);
+
+        return modelMapper.map(documento, DocumentoDTO.class);
     }
 
     public void excluirDocumento(long id) {
-        Documento documento = repositorio.getById(id);
 
-        repositorio.delete(documento);
+        Documento documento = repositorio.findById(id)
+                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
+
+        Cliente cliente = clienteRepositorio.findAll().stream()
+                .filter(c -> c.getDocumentos().contains(documento))
+                .findFirst()
+                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
+
+        cliente.getDocumentos().remove(documento);
+
+        clienteRepositorio.save(cliente);
     }
+
 }

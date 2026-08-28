@@ -3,13 +3,13 @@ package com.autobots.automanager.controles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,10 +35,10 @@ public class DocumentoControle {
         return servicos.buscarDocumentos();
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public DocumentoDTO cadastrarDocumento(@RequestBody DocumentoDTO documentoDTO) {
-        return servicos.cadastrarDocumento(documentoDTO);
+    public DocumentoDTO cadastrarDocumento(@RequestBody DocumentoDTO documentoDTO, @PathVariable("id") long id) {
+        return servicos.cadastrarDocumento(documentoDTO, id);
     }
 
     @PutMapping("/{id}")
@@ -50,7 +50,7 @@ public class DocumentoControle {
     @SuppressWarnings("null")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluirCliente(@PathVariable("id") long id) {
+    public void excluirDocumento(@PathVariable("id") long id) {
         servicos.excluirDocumento(id);
     }
 }

@@ -36,10 +36,10 @@ public class TelefoneControle {
         return servicos.buscarTelefones();
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public TelefoneDTO cadastrarTelefone(@RequestBody TelefoneDTO telefoneDto) {
-        return servicos.cadastrarTelefone(telefoneDto);
+    public TelefoneDTO cadastrarTelefone(@RequestBody TelefoneDTO telefoneDto, @PathVariable("id") long id) {
+        return servicos.cadastrarTelefone(telefoneDto, id);
     }
 
     @PutMapping("/{id}")

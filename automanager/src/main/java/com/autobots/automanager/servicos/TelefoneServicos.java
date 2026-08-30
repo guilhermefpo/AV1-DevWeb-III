@@ -19,74 +19,75 @@ import com.autobots.automanager.repositorios.TelefoneRepositorio;
 @Service
 public class TelefoneServicos {
 
-    @Autowired
-    private TelefoneRepositorio repositorio;
+        @Autowired
+        private TelefoneRepositorio repositorio;
 
-    @Autowired
-    private ClienteRepositorio clienteRepositorio;
+        @Autowired
+        private ClienteRepositorio clienteRepositorio;
 
-    @Autowired
-    private TelefoneAtualizador atualizador;
+        @Autowired
+        private TelefoneAtualizador atualizador;
 
-    @Autowired
-    private ModelMapper modelMapper;
+        @Autowired
+        private ModelMapper modelMapper;
 
-    public List<TelefoneDTO> buscarTelefones() {
-        List<Telefone> telefones = repositorio.findAll();
+        public List<TelefoneDTO> buscarTelefones() {
+                List<Telefone> telefones = repositorio.findAll();
 
-        return telefones.stream()
-                .map(telefone -> modelMapper.map(telefone, TelefoneDTO.class))
-                .collect(Collectors.toList());
-    }
+                return telefones.stream()
+                                .map(telefone -> modelMapper.map(telefone, TelefoneDTO.class))
+                                .collect(Collectors.toList());
+        }
 
-    public TelefoneDTO buscarPorId(Long id) {
-        Telefone telefone = repositorio.findById(id)
-                .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
+        public TelefoneDTO buscarPorId(Long id) {
+                @SuppressWarnings("null")
+                Telefone telefone = repositorio.findById(id)
+                                .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
 
-        return modelMapper.map(telefone, TelefoneDTO.class);
-    }
+                return modelMapper.map(telefone, TelefoneDTO.class);
+        }
 
-    public TelefoneDTO atualizarTelefone(Long id, TelefoneDTO novosDados) {
-        @SuppressWarnings("null")
-        Telefone telefone = repositorio.findById(id)
-                .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
+        public TelefoneDTO atualizarTelefone(Long id, TelefoneDTO novosDados) {
+                @SuppressWarnings("null")
+                Telefone telefone = repositorio.findById(id)
+                                .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
 
-        Telefone dadosNovos = modelMapper.map(novosDados, Telefone.class);
+                Telefone dadosNovos = modelMapper.map(novosDados, Telefone.class);
 
-        atualizador.atualizar(telefone, dadosNovos);
+                atualizador.atualizar(telefone, dadosNovos);
 
-        @SuppressWarnings("null")
-        Telefone telefoneSalvo = repositorio.save(telefone);
+                @SuppressWarnings("null")
+                Telefone telefoneSalvo = repositorio.save(telefone);
 
-        return modelMapper.map(telefoneSalvo, TelefoneDTO.class);
-    }
+                return modelMapper.map(telefoneSalvo, TelefoneDTO.class);
+        }
 
-    public TelefoneDTO cadastrarTelefone(TelefoneDTO novoTelefone, long id) {
+        public TelefoneDTO cadastrarTelefone(TelefoneDTO novoTelefone, long id) {
 
-        Cliente cliente = clienteRepositorio.findById(id)
-                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+                Cliente cliente = clienteRepositorio.findById(id)
+                                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
-        Telefone telefone = modelMapper.map(novoTelefone, Telefone.class);
+                Telefone telefone = modelMapper.map(novoTelefone, Telefone.class);
 
-        cliente.getTelefones().add(telefone);
+                cliente.getTelefones().add(telefone);
 
-        clienteRepositorio.save(cliente);
+                clienteRepositorio.save(cliente);
 
-        return modelMapper.map(telefone, TelefoneDTO.class);
-    }
+                return modelMapper.map(telefone, TelefoneDTO.class);
+        }
 
-    public void excluirTelefone(Long id) {
+        public void excluirTelefone(Long id) {
 
-        Cliente cliente = clienteRepositorio.findAll().stream()
-                .filter(c -> c.getTelefones().stream()
-                        .anyMatch(telefone -> telefone.getId().equals(id)))
-                .findFirst()
-                .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
+                Cliente cliente = clienteRepositorio.findAll().stream()
+                                .filter(c -> c.getTelefones().stream()
+                                                .anyMatch(telefone -> telefone.getId().equals(id)))
+                                .findFirst()
+                                .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
 
-        cliente.getTelefones()
-                .removeIf(telefone -> telefone.getId().equals(id));
+                cliente.getTelefones()
+                                .removeIf(telefone -> telefone.getId().equals(id));
 
-        clienteRepositorio.save(cliente);
-    }
+                clienteRepositorio.save(cliente);
+        }
 
 }

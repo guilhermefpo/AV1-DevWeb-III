@@ -46,11 +46,10 @@ public class ClienteServicos {
         Cliente cliente = repositorio.findById(id)
                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
-        Cliente dadosNovos = modelMapper.map(novosDados, Cliente.class);
+        cliente.setNome(novosDados.getNome());
+        cliente.setNomeSocial(novosDados.getNomeSocial());
+        cliente.setDataNascimento(novosDados.getDataNascimento());
 
-        atualizador.atualizar(cliente, dadosNovos);
-
-        @SuppressWarnings("null")
         Cliente clienteSalvo = repositorio.save(cliente);
 
         return modelMapper.map(clienteSalvo, ClienteDTO.class);

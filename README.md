@@ -91,7 +91,7 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 | :--------- | :---------------- | :----: | :------------------------ |
 | **GET**    | `/documento`      | `200`  | Lista todos os documentos |
 | **GET**    | `/documento/{id}` | `200`  | Busca documento por ID    |
-| **POST**   | `/documento`      | `201`  | Cadastra novo documento   |
+| **POST**   | `/documento/{id}` | `201`  | Cadastra novo documento   |
 | **PUT**    | `/documento/{id}` | `200`  | Atualiza documento        |
 | **DELETE** | `/documento/{id}` | `204`  | Remove documento          |
 
@@ -132,7 +132,7 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 | :--------- | :--------------- | :----: | :----------------------- |
 | **GET**    | `/endereco`      | `200`  | Lista todos os endereços |
 | **GET**    | `/endereco/{id}` | `200`  | Busca endereço por ID    |
-| **POST**   | `/endereco`      | `201`  | Cadastra novo endereço   |
+| **POST**   | `/endereco/{id}` | `201`  | Cadastra novo endereço   |
 | **PUT**    | `/endereco/{id}` | `200`  | Atualiza endereço        |
 | **DELETE** | `/endereco/{id}` | `204`  | Remove endereço          |
 
@@ -168,7 +168,6 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
   "bairro": "Jardim das Indústrias",
   "rua": "Rua das Flores",
   "numero": "456",
-  "codigoPostal": "12230-000",
   "informacoesAdicionais": "Bloco B, Apto 12"
 }
 ```
@@ -183,7 +182,7 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 | :--------- | :--------------- | :----: | :----------------------- |
 | **GET**    | `/telefone`      | `200`  | Lista todos os telefones |
 | **GET**    | `/telefone/{id}` | `200`  | Busca telefone por ID    |
-| **POST**   | `/telefone`      | `201`  | Cadastra novo telefone   |
+| **POST**   | `/telefone/{id}` | `201`  | Cadastra novo telefone   |
 | **PUT**    | `/telefone/{id}` | `200`  | Atualiza telefone        |
 | **DELETE** | `/telefone/{id}` | `204`  | Remove telefone          |
 
@@ -219,3 +218,7 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 ---
 
 > **Nota:** Certifique-se de informar corretamente os parâmetros de caminho (`{id}`) e o formato do payload em JSON no software de testes de requisições de sua preferência, como Postman, Insomnia ou Swagger.
+
+> **Nota:** Quando passar o id no caminho, lembresse que se trata do id do cliente. Ao atualizar, colocar no json o id do que vc quer aatualizar. Para postar não precisa.
+
+> Está tendo um erro de Crud em documento, mas a ideia correta é exatamente a passada nas rotas.

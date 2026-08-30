@@ -198,6 +198,8 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 }
 ```
 
+cd
+
 </details>
 
 <details>
@@ -220,5 +222,3 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 > **Nota:** Certifique-se de informar corretamente os parâmetros de caminho (`{id}`) e o formato do payload em JSON no software de testes de requisições de sua preferência, como Postman, Insomnia ou Swagger.
 
 > **Nota:** Quando passar o id no caminho, lembresse que se trata do id do cliente. Ao atualizar, colocar no json o id do que vc quer aatualizar. Para postar não precisa.
-
-> Está tendo um erro de Crud em documento, mas a ideia correta é exatamente a passada nas rotas.

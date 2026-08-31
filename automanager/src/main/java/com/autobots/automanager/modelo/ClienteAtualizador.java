@@ -28,8 +28,24 @@ public class ClienteAtualizador {
 
 	public void atualizar(Cliente cliente, Cliente atualizacao) {
 		atualizarDados(cliente, atualizacao);
-		enderecoAtualizador.atualizar(cliente.getEndereco(), atualizacao.getEndereco());
-		documentoAtualizador.atualizar(cliente.getDocumentos(), atualizacao.getDocumentos());
-		telefoneAtualizador.atualizar(cliente.getTelefones(), atualizacao.getTelefones());
+
+		if (atualizacao.getEndereco() != null && cliente.getEndereco() != null) {
+			enderecoAtualizador.atualizar(
+					cliente.getEndereco(),
+					atualizacao.getEndereco());
+		}
+
+		if (atualizacao.getDocumentos() != null) {
+			documentoAtualizador.atualizar(
+					cliente.getDocumentos(),
+					atualizacao.getDocumentos());
+		}
+
+		if (atualizacao.getTelefones() != null) {
+			telefoneAtualizador.atualizar(
+					cliente.getTelefones(),
+					atualizacao.getTelefones());
+		}
 	}
+
 }

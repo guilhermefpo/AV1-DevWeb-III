@@ -1,12 +1,31 @@
 # AutoManager
 
-> **Projeto AV1 Dev Web — Início dos trabalhos.**
+> **Projeto AV1 Dev Web.**
 
-## Passos para utilizar o Microsserviço
+## Como funciona
+
+O **AutoManager** é um microsserviço desenvolvido com **Spring Boot** para realizar operações CRUD de clientes e seus dados relacionados.
+
+O sistema possui quatro recursos principais:
+
+- **Cliente**
+- **Documento**
+- **Endereço**
+- **Telefone**
+
+Cada cliente pode possuir:
+
+- um endereço;
+- um ou mais documentos;
+- um ou mais telefones.
+
+Os recursos podem ser cadastrados, consultados, atualizados e removidos por meio de requisições HTTP. Além das operações individuais, o cliente também pode ser atualizado **junto com** seu endereço, documentos e telefones, através de uma única requisição `PUT /cliente/{id}`.
+
+---
+
+## Passos para utilizar o microsserviço
 
 ### 1. Clonar o repositório
-
-Clone o repositório do projeto utilizando o comando:
 
 ```bash
 git clone https://github.com/guilhermefpo/AV1-DevWeb-III.git
@@ -14,15 +33,13 @@ git clone https://github.com/guilhermefpo/AV1-DevWeb-III.git
 
 ### 2. Acessar a pasta do projeto
 
-Entre no diretório do projeto:
-
 ```bash
 cd automanager
 ```
 
 ### 3. Executar o projeto
 
-Inicie a aplicação Spring Boot com o Maven Wrapper:
+Inicie a aplicação Spring Boot utilizando o Maven Wrapper:
 
 ```bash
 .\mvnw.cmd spring-boot:run
@@ -32,28 +49,44 @@ Após a inicialização, aguarde até que a aplicação esteja disponível para 
 
 ### 4. Utilizar a API
 
-Com o microsserviço em execução, utilize as **rotas e requisições da API** para realizar os testes.
+Com o microsserviço em execução, utilize as rotas abaixo para realizar as requisições.
 
-Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramenta de sua preferência para enviar as requisições HTTP.
+Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramenta de sua preferência.
 
-> **💡 Obs:** Verifique a documentação das rotas da API para saber quais endpoints estão disponíveis, quais métodos HTTP devem ser utilizados e quais dados devem ser enviados nas requisições.
+> **Obs:** Verifique a documentação abaixo para saber quais endpoints estão disponíveis, quais métodos HTTP devem ser utilizados e quais dados devem ser enviados nas requisições.
+
+---
+
+## Resumo importante sobre os IDs
+
+O significado do `{id}` na URL **muda de acordo com a operação**:
+
+| Operação                                                   | O `{id}` da URL representa                                                                   |
+| :--------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| `POST /documento/{id}`, `/endereco/{id}`, `/telefone/{id}` | O **ID do cliente** que receberá o recurso                                                   |
+| `PUT` / `DELETE` de documento, endereço ou telefone        | O **ID do próprio recurso**                                                                  |
+| `PUT /cliente/{id}`                                        | O **ID do cliente** — os IDs dentro do JSON identificam os recursos relacionados a atualizar |
+
+Nos cadastros (`POST`), **não é necessário informar o `id` no corpo do JSON**.
+
+---
 
 ## Documentação da API
 
 ### 1. Clientes (`/cliente`)
 
-| Método     | Endpoint        | Status | Descrição               |
-| :--------- | :-------------- | :----: | :---------------------- |
-| **GET**    | `/cliente`      | `200`  | Lista todos os clientes |
-| **GET**    | `/cliente/{id}` | `200`  | Busca cliente por ID    |
-| **POST**   | `/cliente`      | `201`  | Cadastra novo cliente   |
-| **PUT**    | `/cliente/{id}` | `200`  | Atualiza cliente        |
-| **DELETE** | `/cliente/{id}` | `204`  | Remove cliente          |
+O cliente é o recurso principal do sistema. Documentos, endereço e telefones são associados a ele.
+
+| Método     | Endpoint        | Status | Descrição                                    |
+| :--------- | :-------------- | :----: | :------------------------------------------- |
+| **GET**    | `/cliente`      | `200`  | Lista todos os clientes                      |
+| **GET**    | `/cliente/{id}` | `200`  | Busca um cliente pelo ID                     |
+| **POST**   | `/cliente`      | `201`  | Cadastra um novo cliente                     |
+| **PUT**    | `/cliente/{id}` | `200`  | Atualiza o cliente e seus dados relacionados |
+| **DELETE** | `/cliente/{id}` | `204`  | Remove um cliente                            |
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Cadastro (POST)</b></summary>
-
-**Cadastrar:**
+<summary><b>Cadastro — POST /cliente</b></summary>
 
 ```json
 {
@@ -64,22 +97,49 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 }
 ```
 
+Não é necessário informar `id` no cadastro do cliente.
+
 </details>
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Atualização (PUT)</b></summary>
+<summary><b>Atualização completa — PUT /cliente/{id}</b></summary>
 
-**Atualizar:**
+O `{id}` da URL é o ID do cliente que será atualizado. Essa operação permite atualizar, em uma única requisição: dados do cliente, endereço, documentos e telefones.
 
 ```json
 {
-  "id": 2,
-  "nome": "João da Silva Sauro",
-  "nomeSocial": "João",
-  "dataNascimento": "1990-05-15T00:00:00.000+00:00",
-  "dataCadastro": "2026-08-24T00:00:00.000+00:00"
+  "nome": "João da Silva Atualizado",
+  "nomeSocial": "João Atualizado",
+  "dataNascimento": "1991-06-20T00:00:00.000+00:00",
+  "dataCadastro": "2026-08-24T00:00:00.000+00:00",
+  "endereco": {
+    "id": 2,
+    "estado": "RJ",
+    "cidade": "Rio de Janeiro",
+    "bairro": "Copacabana",
+    "rua": "Rua Nova",
+    "numero": "200",
+    "codigoPostal": "22000-000",
+    "informacoesAdicionais": "Apto 20"
+  },
+  "documentos": [
+    {
+      "id": 3,
+      "tipo": "CPF",
+      "numero": "98765432100"
+    }
+  ],
+  "telefones": [
+    {
+      "id": 2,
+      "ddd": "21",
+      "numero": "988888888"
+    }
+  ]
 }
 ```
+
+> **Importante:** no `PUT /cliente/{id}`, o `{id}` da URL identifica o cliente. Já os `id` dentro do JSON identificam os recursos relacionados que serão atualizados.
 
 </details>
 
@@ -87,18 +147,24 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 
 ### 2. Documentos (`/documento`)
 
-| Método     | Endpoint          | Status | Descrição                 |
-| :--------- | :---------------- | :----: | :------------------------ |
-| **GET**    | `/documento`      | `200`  | Lista todos os documentos |
-| **GET**    | `/documento/{id}` | `200`  | Busca documento por ID    |
-| **POST**   | `/documento/{id}` | `201`  | Cadastra novo documento   |
-| **PUT**    | `/documento/{id}` | `200`  | Atualiza documento        |
-| **DELETE** | `/documento/{id}` | `204`  | Remove documento          |
+Os documentos são associados a um cliente. Um cliente pode possuir mais de um documento.
+
+| Método     | Endpoint          | Status | Descrição                             |
+| :--------- | :---------------- | :----: | :------------------------------------ |
+| **GET**    | `/documento`      | `200`  | Lista todos os documentos             |
+| **GET**    | `/documento/{id}` | `200`  | Busca um documento pelo ID            |
+| **POST**   | `/documento/{id}` | `201`  | Cadastra um documento para um cliente |
+| **PUT**    | `/documento/{id}` | `200`  | Atualiza um documento                 |
+| **DELETE** | `/documento/{id}` | `204`  | Remove um documento                   |
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Cadastro (POST)</b></summary>
+<summary><b>Cadastro — POST /documento/{idCliente}</b></summary>
 
-**Cadastrar:**
+No cadastro, o `{id}` da URL é o **ID do cliente** que receberá o documento.
+
+```
+POST /documento/2
+```
 
 ```json
 {
@@ -107,16 +173,21 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 }
 ```
 
+Não é necessário informar o `id` do documento no JSON.
+
 </details>
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Atualização (PUT)</b></summary>
+<summary><b>Atualização — PUT /documento/{idDocumento}</b></summary>
 
-**Atualizar:**
+Nesse caso, o `{id}` da URL é o **ID do documento** que será atualizado.
+
+```
+PUT /documento/3
+```
 
 ```json
 {
-  "id": 2,
   "tipo": "CPF",
   "numero": "98765432100"
 }
@@ -128,18 +199,24 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 
 ### 3. Endereços (`/endereco`)
 
-| Método     | Endpoint         | Status | Descrição                |
-| :--------- | :--------------- | :----: | :----------------------- |
-| **GET**    | `/endereco`      | `200`  | Lista todos os endereços |
-| **GET**    | `/endereco/{id}` | `200`  | Busca endereço por ID    |
-| **POST**   | `/endereco/{id}` | `201`  | Cadastra novo endereço   |
-| **PUT**    | `/endereco/{id}` | `200`  | Atualiza endereço        |
-| **DELETE** | `/endereco/{id}` | `204`  | Remove endereço          |
+Cada cliente possui um endereço associado.
+
+| Método     | Endpoint         | Status | Descrição                            |
+| :--------- | :--------------- | :----: | :----------------------------------- |
+| **GET**    | `/endereco`      | `200`  | Lista todos os endereços             |
+| **GET**    | `/endereco/{id}` | `200`  | Busca um endereço pelo ID            |
+| **POST**   | `/endereco/{id}` | `201`  | Cadastra um endereço para um cliente |
+| **PUT**    | `/endereco/{id}` | `200`  | Atualiza um endereço                 |
+| **DELETE** | `/endereco/{id}` | `204`  | Remove um endereço                   |
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Cadastro (POST)</b></summary>
+<summary><b>Cadastro — POST /endereco/{idCliente}</b></summary>
 
-**Cadastrar:**
+O `{id}` da URL é o **ID do cliente** que receberá o endereço.
+
+```
+POST /endereco/2
+```
 
 ```json
 {
@@ -153,21 +230,27 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 }
 ```
 
+Não é necessário informar o `id` do endereço no JSON.
+
 </details>
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Atualização (PUT)</b></summary>
+<summary><b>Atualização — PUT /endereco/{idEndereco}</b></summary>
 
-**Atualizar:**
+O `{id}` da URL passa a ser o **ID do endereço** que será atualizado.
+
+```
+PUT /endereco/2
+```
 
 ```json
 {
-  "id": 2,
   "estado": "SP",
   "cidade": "São José dos Campos",
   "bairro": "Jardim das Indústrias",
   "rua": "Rua das Flores",
   "numero": "456",
+  "codigoPostal": "12200-000",
   "informacoesAdicionais": "Bloco B, Apto 12"
 }
 ```
@@ -178,18 +261,24 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 
 ### 4. Telefones (`/telefone`)
 
-| Método     | Endpoint         | Status | Descrição                |
-| :--------- | :--------------- | :----: | :----------------------- |
-| **GET**    | `/telefone`      | `200`  | Lista todos os telefones |
-| **GET**    | `/telefone/{id}` | `200`  | Busca telefone por ID    |
-| **POST**   | `/telefone/{id}` | `201`  | Cadastra novo telefone   |
-| **PUT**    | `/telefone/{id}` | `200`  | Atualiza telefone        |
-| **DELETE** | `/telefone/{id}` | `204`  | Remove telefone          |
+Um cliente pode possuir mais de um telefone.
+
+| Método     | Endpoint         | Status | Descrição                            |
+| :--------- | :--------------- | :----: | :----------------------------------- |
+| **GET**    | `/telefone`      | `200`  | Lista todos os telefones             |
+| **GET**    | `/telefone/{id}` | `200`  | Busca um telefone pelo ID            |
+| **POST**   | `/telefone/{id}` | `201`  | Cadastra um telefone para um cliente |
+| **PUT**    | `/telefone/{id}` | `200`  | Atualiza um telefone                 |
+| **DELETE** | `/telefone/{id}` | `204`  | Remove um telefone                   |
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Cadastro (POST)</b></summary>
+<summary><b>Cadastro — POST /telefone/{idCliente}</b></summary>
 
-**Cadastrar:**
+O `{id}` da URL é o **ID do cliente** que receberá o telefone.
+
+```
+POST /telefone/2
+```
 
 ```json
 {
@@ -198,18 +287,21 @@ Você pode utilizar ferramentas como **Postman**, **Insomnia** ou outra ferramen
 }
 ```
 
-cd
+Não é necessário informar o `id` do telefone no JSON.
 
 </details>
 
 <details>
-<summary>📋 <b>Clique aqui para abrir o JSON de Atualização (PUT)</b></summary>
+<summary><b>Atualização — PUT /telefone/{idTelefone}</b></summary>
 
-**Atualizar:**
+O `{id}` da URL é o **ID do telefone** que será atualizado.
+
+```
+PUT /telefone/2
+```
 
 ```json
 {
-  "id": 2,
   "ddd": "12",
   "numero": "988887777"
 }
@@ -219,6 +311,15 @@ cd
 
 ---
 
-> **Nota:** Certifique-se de informar corretamente os parâmetros de caminho (`{id}`) e o formato do payload em JSON no software de testes de requisições de sua preferência, como Postman, Insomnia ou Swagger.
+## Fluxo básico de utilização
 
-> **Nota:** Quando passar o id no caminho, lembresse que se trata do id do cliente. Ao atualizar, colocar no json o id do que vc quer aatualizar. Para postar não precisa.
+1. Cadastrar o cliente com `POST /cliente`.
+2. Utilizar o ID retornado para cadastrar seu endereço, documentos e telefones.
+3. Consultar o cliente através de `GET /cliente/{id}`.
+4. Atualizar cada recurso individualmente **ou** utilizar `PUT /cliente/{id}` para atualizar o cliente e seus dados relacionados de uma vez.
+5. Remover documentos, telefones ou endereço utilizando seus respectivos endpoints.
+6. Remover o cliente através de `DELETE /cliente/{id}`.
+
+> **Nota:** Certifique-se de informar corretamente os parâmetros de caminho (`{id}`) e o formato do payload em JSON no software de testes de requisições de sua preferência, como Postman, Insomnia ou Swagger.
+>
+> **Resumo:** nos `POST` de documento, endereço e telefone, o ID informado na URL é o **ID do cliente**. Nos `PUT` e `DELETE` desses recursos, o ID informado na URL é o **ID do próprio recurso**. No `PUT /cliente/{id}`, o ID da URL é o **ID do cliente**, enquanto os IDs presentes no JSON identificam os dados relacionados que serão atualizados.

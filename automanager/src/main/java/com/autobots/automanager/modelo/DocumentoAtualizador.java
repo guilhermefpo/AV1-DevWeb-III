@@ -25,7 +25,7 @@ public class DocumentoAtualizador {
 		for (Documento atualizacao : atualizacoes) {
 			for (Documento documento : documentos) {
 				if (atualizacao.getId() != null) {
-					if (atualizacao.getId() == documento.getId()) {
+					if (atualizacao.getId().equals(documento.getId())) {
 						atualizar(documento, atualizacao);
 					}
 				}

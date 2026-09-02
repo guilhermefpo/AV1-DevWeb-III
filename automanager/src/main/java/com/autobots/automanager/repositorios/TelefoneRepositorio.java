@@ -6,4 +6,6 @@ import com.autobots.automanager.entidades.Telefone;
 
 public interface TelefoneRepositorio extends JpaRepository<Telefone, Long> {
 
+    boolean existsByNumero(String numero);
+
 }

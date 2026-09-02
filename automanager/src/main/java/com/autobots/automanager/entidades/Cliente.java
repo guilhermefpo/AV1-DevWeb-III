@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -24,7 +26,12 @@ public class Cliente {
 	private Long id;
 
 	@Column
+	@NotBlank(message = "Nome é obrigatório")
 	private String nome;
+
+	@Column
+	@NotBlank(message = "CPF é um campo obrigatório")
+	private String cpf;
 
 	@Column
 	private String nomeSocial;
@@ -33,6 +40,7 @@ public class Cliente {
 	private Date dataNascimento;
 
 	@Column
+	@NotNull(message = "Data cadastro é obrigatório")
 	private Date dataCadastro;
 
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)

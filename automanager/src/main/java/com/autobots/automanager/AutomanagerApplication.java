@@ -34,6 +34,7 @@ public class AutomanagerApplication {
 
 			Cliente cliente = new Cliente();
 			cliente.setNome("Pedro Alcântara de Bragança e Bourbon");
+			cliente.setCpf("12345678901");
 			cliente.setDataCadastro(Calendar.getInstance().getTime());
 			cliente.setDataNascimento(calendario.getTime());
 			cliente.setNomeSocial("Dom Pedro");

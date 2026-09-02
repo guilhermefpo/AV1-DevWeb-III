@@ -12,6 +12,7 @@ import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
 import com.autobots.automanager.excecoes.TelefoneNaoEncontradoException;
+import com.autobots.automanager.excecoes.TelefoneJaCadastradoException;
 import com.autobots.automanager.modelo.TelefoneAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 import com.autobots.automanager.repositorios.TelefoneRepositorio;
@@ -66,6 +67,11 @@ public class TelefoneServicos {
 
                 Cliente cliente = clienteRepositorio.findById(id)
                                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+
+                if (repositorio.existsByNumero(novoTelefone.getNumero())) {
+                        throw new TelefoneJaCadastradoException(
+                                        "Já existe um telefone cadastrado com esse número.");
+                }
 
                 Telefone telefone = modelMapper.map(novoTelefone, Telefone.class);
 

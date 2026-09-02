@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.dtos.ClienteDTO;
 import com.autobots.automanager.entidades.Cliente;
+import com.autobots.automanager.excecoes.ClienteJaCadastradoException;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
 import com.autobots.automanager.modelo.ClienteAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
@@ -57,6 +58,12 @@ public class ClienteServicos {
     }
 
     public ClienteDTO cadastrarCliente(ClienteDTO novoCliente) {
+
+        if (repositorio.existsByCpf(novoCliente.getCpf())) {
+            throw new ClienteJaCadastradoException(
+                    "Já existe um cliente cadastrado com esse CPF.");
+        }
+
         Cliente cliente = modelMapper.map(novoCliente, Cliente.class);
 
         @SuppressWarnings("null")

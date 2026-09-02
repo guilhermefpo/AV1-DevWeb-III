@@ -9,6 +9,7 @@ import lombok.Data;
 public class ClienteDTO {
     private Long id;
     private String nome;
+    private String cpf;
     private String nomeSocial;
     private Date dataNascimento;
     private Date dataCadastro;

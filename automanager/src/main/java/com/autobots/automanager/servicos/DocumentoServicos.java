@@ -11,6 +11,7 @@ import com.autobots.automanager.dtos.DocumentoDTO;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
+import com.autobots.automanager.excecoes.DocumentoJaCadastradoException;
 import com.autobots.automanager.excecoes.DocumentoNaoEncontradoException;
 import com.autobots.automanager.modelo.DocumentoAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
@@ -64,6 +65,11 @@ public class DocumentoServicos {
 
         Cliente cliente = clienteRepositorio.findById(id)
                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+
+        if (repositorio.existsByNumero(novoDocumento.getNumero())) {
+            throw new DocumentoJaCadastradoException(
+                    "Já existe um documento cadastrado com esse número.");
+        }
 
         Documento documento = modelMapper.map(novoDocumento, Documento.class);
 

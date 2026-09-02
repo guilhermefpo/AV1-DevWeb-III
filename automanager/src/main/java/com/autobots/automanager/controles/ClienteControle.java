@@ -1,6 +1,7 @@
 package com.autobots.automanager.controles;
 
 import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class ClienteControle {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ClienteDTO cadastrarCliente(@RequestBody ClienteDTO clienteDto) {
+	public ClienteDTO cadastrarCliente(@Valid @RequestBody ClienteDTO clienteDto) {
 		return servicos.cadastrarCliente(clienteDto);
 	}
 

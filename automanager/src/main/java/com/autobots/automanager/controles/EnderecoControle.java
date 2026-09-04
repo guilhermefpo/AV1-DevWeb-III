@@ -2,8 +2,11 @@ package com.autobots.automanager.controles;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,7 @@ import com.autobots.automanager.servicos.EnderecoServicos;
 
 @RestController
 @RequestMapping("/endereco")
+@Validated
 public class EnderecoControle {
 
     @Autowired
@@ -39,7 +43,8 @@ public class EnderecoControle {
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public EnderecoRespostaDTO cadastrarEndereco(@RequestBody EnderecoDTO enderecoDto, @PathVariable("id") long id) {
+    public EnderecoRespostaDTO cadastrarEndereco(@Valid @RequestBody EnderecoDTO enderecoDto,
+            @PathVariable("id") long id) {
         return servicos.cadastrarEndereco(enderecoDto, id);
     }
 

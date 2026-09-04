@@ -5,11 +5,10 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.autobots.automanager.dtos.EnderecoDTO;
+import com.autobots.automanager.dtos.EnderecoRespostaDTO;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Endereco;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
@@ -33,52 +32,71 @@ public class EnderecoServicos {
   @Autowired
   private ModelMapper modelMapper;
 
-  public List<EnderecoDTO> buscarEnderecos() {
+  public List<EnderecoRespostaDTO> buscarEnderecos() {
     List<Endereco> enderecos = repositorio.findAll();
 
     return enderecos.stream()
-        .map(endereco -> modelMapper.map(endereco, EnderecoDTO.class))
+        .map(endereco -> modelMapper.map(
+            endereco,
+            EnderecoRespostaDTO.class))
         .collect(Collectors.toList());
   }
 
-  public EnderecoDTO buscarPorId(Long id) {
+  public EnderecoRespostaDTO buscarPorId(Long id) {
+
     @SuppressWarnings("null")
     Endereco endereco = repositorio.findById(id)
         .orElseThrow(() -> new EnderecoNaoEncontradoException(id));
 
-    return modelMapper.map(endereco, EnderecoDTO.class);
+    return modelMapper.map(
+        endereco,
+        EnderecoRespostaDTO.class);
   }
 
-  public EnderecoDTO atualizarEndereco(Long id, EnderecoDTO novosDados) {
+  public EnderecoRespostaDTO atualizarEndereco(
+      Long id,
+      EnderecoDTO novosDados) {
+
     @SuppressWarnings("null")
     Endereco endereco = repositorio.findById(id)
         .orElseThrow(() -> new EnderecoNaoEncontradoException(id));
 
-    Endereco dadosNovos = modelMapper.map(novosDados, Endereco.class);
+    Endereco dadosNovos = modelMapper.map(
+        novosDados,
+        Endereco.class);
 
     atualizador.atualizar(endereco, dadosNovos);
 
     @SuppressWarnings("null")
     Endereco enderecoSalvo = repositorio.save(endereco);
 
-    return modelMapper.map(enderecoSalvo, EnderecoDTO.class);
+    return modelMapper.map(
+        enderecoSalvo,
+        EnderecoRespostaDTO.class);
   }
 
-  public EnderecoDTO cadastrarEndereco(EnderecoDTO novoEndereco, long id) {
+  public EnderecoRespostaDTO cadastrarEndereco(
+      EnderecoDTO novoEndereco,
+      Long id) {
 
     Cliente cliente = clienteRepositorio.findById(id)
         .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
-    Endereco endereco = modelMapper.map(novoEndereco, Endereco.class);
+    Endereco endereco = modelMapper.map(
+        novoEndereco,
+        Endereco.class);
 
     cliente.setEndereco(endereco);
 
     clienteRepositorio.save(cliente);
 
-    return modelMapper.map(endereco, EnderecoDTO.class);
+    return modelMapper.map(
+        endereco,
+        EnderecoRespostaDTO.class);
   }
 
-  public void excluirEndereco(long id) {
+  public void excluirEndereco(Long id) {
+
     Cliente cliente = clienteRepositorio.findAll().stream()
         .filter(c -> c.getEndereco() != null
             && c.getEndereco().getId().equals(id))
@@ -89,5 +107,4 @@ public class EnderecoServicos {
 
     clienteRepositorio.save(cliente);
   }
-
 }

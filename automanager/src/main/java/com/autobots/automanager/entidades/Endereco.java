@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 public class Endereco {
-	@Id()
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = true)

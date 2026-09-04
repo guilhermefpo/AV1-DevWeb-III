@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.dtos.ClienteDTO;
+import com.autobots.automanager.dtos.ClienteRespostaDTO;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.excecoes.ClienteJaCadastradoException;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
@@ -26,23 +27,22 @@ public class ClienteServicos {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<ClienteDTO> buscarClientes() {
+    public List<ClienteRespostaDTO> buscarClientes() {
         List<Cliente> clientes = repositorio.findAll();
 
         return clientes.stream()
-                .map(cliente -> modelMapper.map(cliente, ClienteDTO.class))
+                .map(cliente -> modelMapper.map(cliente, ClienteRespostaDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public ClienteDTO buscarPorId(Long id) {
-        @SuppressWarnings("null")
+    public ClienteRespostaDTO buscarPorId(Long id) {
         Cliente cliente = repositorio.findById(id)
                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
-        return modelMapper.map(cliente, ClienteDTO.class);
+        return modelMapper.map(cliente, ClienteRespostaDTO.class);
     }
 
-    public ClienteDTO atualizarCliente(Long id, ClienteDTO novosDados) {
+    public ClienteRespostaDTO atualizarCliente(Long id, ClienteDTO novosDados) {
         @SuppressWarnings("null")
         Cliente cliente = repositorio.findById(id)
                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
@@ -54,10 +54,10 @@ public class ClienteServicos {
         @SuppressWarnings("null")
         Cliente clienteSalvo = repositorio.save(cliente);
 
-        return modelMapper.map(clienteSalvo, ClienteDTO.class);
+        return modelMapper.map(clienteSalvo, ClienteRespostaDTO.class);
     }
 
-    public ClienteDTO cadastrarCliente(ClienteDTO novoCliente) {
+    public ClienteRespostaDTO cadastrarCliente(ClienteDTO novoCliente) {
 
         if (repositorio.existsByCpf(novoCliente.getCpf())) {
             throw new ClienteJaCadastradoException(
@@ -69,11 +69,12 @@ public class ClienteServicos {
         @SuppressWarnings("null")
         Cliente clienteSalvo = repositorio.save(cliente);
 
-        return modelMapper.map(clienteSalvo, ClienteDTO.class);
+        return modelMapper.map(clienteSalvo, ClienteRespostaDTO.class);
     }
 
-    public void excluirCliente(long id) {
-        Cliente cliente = repositorio.getById(id);
+    public void excluirCliente(Long id) {
+        Cliente cliente = repositorio.findById(id)
+                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
         repositorio.delete(cliente);
     }

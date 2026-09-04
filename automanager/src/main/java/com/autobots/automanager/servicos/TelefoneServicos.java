@@ -8,11 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.dtos.TelefoneDTO;
+import com.autobots.automanager.dtos.TelefoneRespostaDTO;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
-import com.autobots.automanager.excecoes.TelefoneNaoEncontradoException;
 import com.autobots.automanager.excecoes.TelefoneJaCadastradoException;
+import com.autobots.automanager.excecoes.TelefoneNaoEncontradoException;
 import com.autobots.automanager.modelo.TelefoneAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 import com.autobots.automanager.repositorios.TelefoneRepositorio;
@@ -32,38 +33,49 @@ public class TelefoneServicos {
         @Autowired
         private ModelMapper modelMapper;
 
-        public List<TelefoneDTO> buscarTelefones() {
+        public List<TelefoneRespostaDTO> buscarTelefones() {
                 List<Telefone> telefones = repositorio.findAll();
 
                 return telefones.stream()
-                                .map(telefone -> modelMapper.map(telefone, TelefoneDTO.class))
+                                .map(telefone -> modelMapper.map(
+                                                telefone,
+                                                TelefoneRespostaDTO.class))
                                 .collect(Collectors.toList());
         }
 
-        public TelefoneDTO buscarPorId(Long id) {
-                @SuppressWarnings("null")
+        public TelefoneRespostaDTO buscarPorId(Long id) {
+
                 Telefone telefone = repositorio.findById(id)
                                 .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
 
-                return modelMapper.map(telefone, TelefoneDTO.class);
+                return modelMapper.map(
+                                telefone,
+                                TelefoneRespostaDTO.class);
         }
 
-        public TelefoneDTO atualizarTelefone(Long id, TelefoneDTO novosDados) {
-                @SuppressWarnings("null")
+        public TelefoneRespostaDTO atualizarTelefone(
+                        Long id,
+                        TelefoneDTO novosDados) {
+
                 Telefone telefone = repositorio.findById(id)
                                 .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
 
-                Telefone dadosNovos = modelMapper.map(novosDados, Telefone.class);
+                Telefone dadosNovos = modelMapper.map(
+                                novosDados,
+                                Telefone.class);
 
                 atualizador.atualizar(telefone, dadosNovos);
 
-                @SuppressWarnings("null")
                 Telefone telefoneSalvo = repositorio.save(telefone);
 
-                return modelMapper.map(telefoneSalvo, TelefoneDTO.class);
+                return modelMapper.map(
+                                telefoneSalvo,
+                                TelefoneRespostaDTO.class);
         }
 
-        public TelefoneDTO cadastrarTelefone(TelefoneDTO novoTelefone, long id) {
+        public TelefoneRespostaDTO cadastrarTelefone(
+                        TelefoneDTO novoTelefone,
+                        Long id) {
 
                 Cliente cliente = clienteRepositorio.findById(id)
                                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
@@ -73,13 +85,17 @@ public class TelefoneServicos {
                                         "Já existe um telefone cadastrado com esse número.");
                 }
 
-                Telefone telefone = modelMapper.map(novoTelefone, Telefone.class);
+                Telefone telefone = modelMapper.map(
+                                novoTelefone,
+                                Telefone.class);
 
                 cliente.getTelefones().add(telefone);
 
                 clienteRepositorio.save(cliente);
 
-                return modelMapper.map(telefone, TelefoneDTO.class);
+                return modelMapper.map(
+                                telefone,
+                                TelefoneRespostaDTO.class);
         }
 
         public void excluirTelefone(Long id) {
@@ -95,5 +111,4 @@ public class TelefoneServicos {
 
                 clienteRepositorio.save(cliente);
         }
-
 }

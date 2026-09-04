@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.dtos.TelefoneDTO;
+import com.autobots.automanager.dtos.TelefoneRespostaDTO;
 import com.autobots.automanager.servicos.TelefoneServicos;
 
 @RestController
@@ -26,25 +27,25 @@ public class TelefoneControle {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TelefoneDTO obterTelefone(@PathVariable("id") long id) {
+    public TelefoneRespostaDTO obterTelefone(@PathVariable("id") long id) {
         return servicos.buscarPorId(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<TelefoneDTO> obterTelefones() {
+    public List<TelefoneRespostaDTO> obterTelefones() {
         return servicos.buscarTelefones();
     }
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public TelefoneDTO cadastrarTelefone(@RequestBody TelefoneDTO telefoneDto, @PathVariable("id") long id) {
+    public TelefoneRespostaDTO cadastrarTelefone(@RequestBody TelefoneDTO telefoneDto, @PathVariable("id") long id) {
         return servicos.cadastrarTelefone(telefoneDto, id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TelefoneDTO atualizarTelefone(
+    public TelefoneRespostaDTO atualizarTelefone(
             @PathVariable("id") long id,
             @RequestBody TelefoneDTO atualizacao) {
 

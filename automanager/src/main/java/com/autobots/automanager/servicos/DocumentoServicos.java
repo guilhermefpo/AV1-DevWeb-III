@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.dtos.DocumentoDTO;
+import com.autobots.automanager.dtos.DocumentoRespostaDTO;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
 import com.autobots.automanager.excecoes.ClienteNaoEncontradoException;
@@ -19,6 +20,7 @@ import com.autobots.automanager.repositorios.DocumentoRepositorio;
 
 @Service
 public class DocumentoServicos {
+
     @Autowired
     private DocumentoRepositorio repositorio;
 
@@ -31,38 +33,47 @@ public class DocumentoServicos {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<DocumentoDTO> buscarDocumentos() {
+    public List<DocumentoRespostaDTO> buscarDocumentos() {
         List<Documento> documentos = repositorio.findAll();
 
         return documentos.stream()
-                .map(documento -> modelMapper.map(documento, DocumentoDTO.class))
+                .map(documento -> modelMapper.map(documento, DocumentoRespostaDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public DocumentoDTO buscarPorId(Long id) {
-        @SuppressWarnings("null")
+    public DocumentoRespostaDTO buscarPorId(Long id) {
+
         Documento documento = repositorio.findById(id)
                 .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
 
-        return modelMapper.map(documento, DocumentoDTO.class);
+        return modelMapper.map(documento, DocumentoRespostaDTO.class);
     }
 
-    public DocumentoDTO atualizarDocumento(Long id, DocumentoDTO novosDados) {
+    public DocumentoRespostaDTO atualizarDocumento(
+            Long id,
+            DocumentoDTO novosDados) {
+
         @SuppressWarnings("null")
         Documento documento = repositorio.findById(id)
                 .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
 
         Documento dadosNovos = modelMapper.map(novosDados, Documento.class);
+
         atualizador.atualizar(documento, dadosNovos);
 
         @SuppressWarnings("null")
         Documento documentoSalvo = repositorio.save(documento);
 
-        return modelMapper.map(documentoSalvo, DocumentoDTO.class);
+        return modelMapper.map(
+                documentoSalvo,
+                DocumentoRespostaDTO.class);
     }
 
-    public DocumentoDTO cadastrarDocumento(DocumentoDTO novoDocumento, long id) {
+    public DocumentoRespostaDTO cadastrarDocumento(
+            DocumentoDTO novoDocumento,
+            Long id) {
 
+        @SuppressWarnings("null")
         Cliente cliente = clienteRepositorio.findById(id)
                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
@@ -71,17 +82,21 @@ public class DocumentoServicos {
                     "Já existe um documento cadastrado com esse número.");
         }
 
-        Documento documento = modelMapper.map(novoDocumento, Documento.class);
+        Documento documento = modelMapper.map(
+                novoDocumento,
+                Documento.class);
 
         cliente.getDocumentos().add(documento);
 
         clienteRepositorio.save(cliente);
 
-        return modelMapper.map(documento, DocumentoDTO.class);
+        return modelMapper.map(
+                documento,
+                DocumentoRespostaDTO.class);
     }
 
-    public void excluirDocumento(long id) {
-
+    public void excluirDocumento(Long id) {
+        @SuppressWarnings("null")
         Documento documento = repositorio.findById(id)
                 .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
 
@@ -94,5 +109,4 @@ public class DocumentoServicos {
 
         clienteRepositorio.save(cliente);
     }
-
 }

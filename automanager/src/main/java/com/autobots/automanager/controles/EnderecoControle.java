@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.dtos.EnderecoDTO;
+import com.autobots.automanager.dtos.EnderecoRespostaDTO;
 import com.autobots.automanager.servicos.EnderecoServicos;
 
 @RestController
@@ -26,25 +27,25 @@ public class EnderecoControle {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EnderecoDTO obterEndereco(@PathVariable("id") long id) {
+    public EnderecoRespostaDTO obterEndereco(@PathVariable("id") long id) {
         return servicos.buscarPorId(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<EnderecoDTO> obterEnderecos() {
+    public List<EnderecoRespostaDTO> obterEnderecos() {
         return servicos.buscarEnderecos();
     }
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public EnderecoDTO cadastrarEndereco(@RequestBody EnderecoDTO enderecoDto, @PathVariable("id") long id) {
+    public EnderecoRespostaDTO cadastrarEndereco(@RequestBody EnderecoDTO enderecoDto, @PathVariable("id") long id) {
         return servicos.cadastrarEndereco(enderecoDto, id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EnderecoDTO atualizarEndereco(@PathVariable("id") long id, @RequestBody EnderecoDTO atualizacao) {
+    public EnderecoRespostaDTO atualizarEndereco(@PathVariable("id") long id, @RequestBody EnderecoDTO atualizacao) {
         return servicos.atualizarEndereco(id, atualizacao);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.dtos.DocumentoDTO;
+import com.autobots.automanager.dtos.DocumentoRespostaDTO;
 import com.autobots.automanager.servicos.DocumentoServicos;
 
 @RestController
@@ -25,25 +26,26 @@ public class DocumentoControle {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public DocumentoDTO buscarDocumento(@PathVariable("id") long id) {
+    public DocumentoRespostaDTO buscarDocumento(@PathVariable("id") long id) {
         return servicos.buscarPorId(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<DocumentoDTO> obterDocumentos() {
+    public List<DocumentoRespostaDTO> obterDocumentos() {
         return servicos.buscarDocumentos();
     }
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public DocumentoDTO cadastrarDocumento(@RequestBody DocumentoDTO documentoDTO, @PathVariable("id") long id) {
+    public DocumentoRespostaDTO cadastrarDocumento(@RequestBody DocumentoDTO documentoDTO,
+            @PathVariable("id") long id) {
         return servicos.cadastrarDocumento(documentoDTO, id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public DocumentoDTO atualizarDocumento(@PathVariable("id") long id, @RequestBody DocumentoDTO novosDados) {
+    public DocumentoRespostaDTO atualizarDocumento(@PathVariable("id") long id, @RequestBody DocumentoDTO novosDados) {
         return servicos.atualizarDocumento(id, novosDados);
     }
 

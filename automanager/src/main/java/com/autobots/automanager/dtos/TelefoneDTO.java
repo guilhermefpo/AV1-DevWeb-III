@@ -1,10 +1,13 @@
 package com.autobots.automanager.dtos;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.Data;
 
 @Data
 public class TelefoneDTO {
-    private Long id;
+    @NotBlank(message = "DDD é um campo obrigatório")
     private String ddd;
+    @NotBlank(message = "Número é um campo obrigatório")
     private String numero;
 }

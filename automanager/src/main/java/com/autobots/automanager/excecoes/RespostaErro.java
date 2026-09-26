@@ -14,4 +14,5 @@ import lombok.Setter;
 public class RespostaErro {
     private Integer status;
     private String mensagem;
+    private String statusCode;
 }

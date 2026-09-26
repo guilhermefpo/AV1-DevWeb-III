@@ -104,7 +104,7 @@ O cliente é o recurso principal do sistema. Documentos, endereço e telefones s
 ```json
 {
   "nome": "João da Silva",
-  "cpf": "12345678901",
+  "cpf": "52982546727",
   "nomeSocial": "João",
   "dataNascimento": "1990-05-15T00:00:00.000+00:00",
   "dataCadastro": "2026-08-24T00:00:00.000+00:00",

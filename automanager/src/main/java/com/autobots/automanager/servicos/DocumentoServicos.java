@@ -21,92 +21,92 @@ import com.autobots.automanager.repositorios.DocumentoRepositorio;
 @Service
 public class DocumentoServicos {
 
-    @Autowired
-    private DocumentoRepositorio repositorio;
+        @Autowired
+        private DocumentoRepositorio repositorio;
 
-    @Autowired
-    private ClienteRepositorio clienteRepositorio;
+        @Autowired
+        private ClienteRepositorio clienteRepositorio;
 
-    @Autowired
-    private DocumentoAtualizador atualizador;
+        @Autowired
+        private DocumentoAtualizador atualizador;
 
-    @Autowired
-    private ModelMapper modelMapper;
+        @Autowired
+        private ModelMapper modelMapper;
 
-    public List<DocumentoRespostaDTO> buscarDocumentos() {
-        List<Documento> documentos = repositorio.findAll();
+        public List<DocumentoRespostaDTO> buscarDocumentos() {
+                List<Documento> documentos = repositorio.findAll();
 
-        return documentos.stream()
-                .map(documento -> modelMapper.map(documento, DocumentoRespostaDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    public DocumentoRespostaDTO buscarPorId(Long id) {
-
-        Documento documento = repositorio.findById(id)
-                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
-
-        return modelMapper.map(documento, DocumentoRespostaDTO.class);
-    }
-
-    public DocumentoRespostaDTO atualizarDocumento(
-            Long id,
-            DocumentoDTO novosDados) {
-
-        @SuppressWarnings("null")
-        Documento documento = repositorio.findById(id)
-                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
-
-        Documento dadosNovos = modelMapper.map(novosDados, Documento.class);
-
-        atualizador.atualizar(documento, dadosNovos);
-
-        @SuppressWarnings("null")
-        Documento documentoSalvo = repositorio.save(documento);
-
-        return modelMapper.map(
-                documentoSalvo,
-                DocumentoRespostaDTO.class);
-    }
-
-    public DocumentoRespostaDTO cadastrarDocumento(
-            DocumentoDTO novoDocumento,
-            Long id) {
-
-        @SuppressWarnings("null")
-        Cliente cliente = clienteRepositorio.findById(id)
-                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
-
-        if (repositorio.existsByNumero(novoDocumento.getNumero())) {
-            throw new DocumentoJaCadastradoException(
-                    "Já existe um documento cadastrado com esse número.");
+                return documentos.stream()
+                                .map(documento -> modelMapper.map(documento, DocumentoRespostaDTO.class))
+                                .collect(Collectors.toList());
         }
 
-        Documento documento = modelMapper.map(
-                novoDocumento,
-                Documento.class);
+        public DocumentoRespostaDTO buscarPorId(Long id) {
+                @SuppressWarnings("null")
+                Documento documento = repositorio.findById(id)
+                                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
 
-        cliente.getDocumentos().add(documento);
+                return modelMapper.map(documento, DocumentoRespostaDTO.class);
+        }
 
-        clienteRepositorio.save(cliente);
+        public DocumentoRespostaDTO atualizarDocumento(
+                        Long id,
+                        DocumentoDTO novosDados) {
 
-        return modelMapper.map(
-                documento,
-                DocumentoRespostaDTO.class);
-    }
+                @SuppressWarnings("null")
+                Documento documento = repositorio.findById(id)
+                                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
 
-    public void excluirDocumento(Long id) {
-        @SuppressWarnings("null")
-        Documento documento = repositorio.findById(id)
-                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
+                Documento dadosNovos = modelMapper.map(novosDados, Documento.class);
 
-        Cliente cliente = clienteRepositorio.findAll().stream()
-                .filter(c -> c.getDocumentos().contains(documento))
-                .findFirst()
-                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
+                atualizador.atualizar(documento, dadosNovos);
 
-        cliente.getDocumentos().remove(documento);
+                @SuppressWarnings("null")
+                Documento documentoSalvo = repositorio.save(documento);
 
-        clienteRepositorio.save(cliente);
-    }
+                return modelMapper.map(
+                                documentoSalvo,
+                                DocumentoRespostaDTO.class);
+        }
+
+        public DocumentoRespostaDTO cadastrarDocumento(
+                        DocumentoDTO novoDocumento,
+                        Long id) {
+
+                @SuppressWarnings("null")
+                Cliente cliente = clienteRepositorio.findById(id)
+                                .orElseThrow(() -> new ClienteNaoEncontradoException(id));
+
+                if (repositorio.existsByNumero(novoDocumento.getNumero())) {
+                        throw new DocumentoJaCadastradoException(
+                                        "Já existe um documento cadastrado com esse número.");
+                }
+
+                Documento documento = modelMapper.map(
+                                novoDocumento,
+                                Documento.class);
+
+                cliente.getDocumentos().add(documento);
+
+                clienteRepositorio.save(cliente);
+
+                return modelMapper.map(
+                                documento,
+                                DocumentoRespostaDTO.class);
+        }
+
+        public void excluirDocumento(Long id) {
+                @SuppressWarnings("null")
+                Documento documento = repositorio.findById(id)
+                                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
+
+                Cliente cliente = clienteRepositorio.findAll().stream()
+                                .filter(c -> c.getDocumentos().contains(documento))
+                                .findFirst()
+                                .orElseThrow(() -> new DocumentoNaoEncontradoException(id));
+
+                cliente.getDocumentos().remove(documento);
+
+                clienteRepositorio.save(cliente);
+        }
 }

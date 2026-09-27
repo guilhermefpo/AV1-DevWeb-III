@@ -2,11 +2,9 @@ package com.autobots.automanager.servicos;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.autobots.automanager.dtos.ClienteDTO;
 import com.autobots.automanager.dtos.ClienteRespostaDTO;
 import com.autobots.automanager.entidades.Cliente;
@@ -19,7 +17,7 @@ import com.autobots.automanager.repositorios.ClienteRepositorio;
 public class ClienteServicos {
 
     @Autowired
-    private ClienteRepositorio repositorio;
+    private ClienteRepositorio repositorio; // Devil Woman - Cliff Richard
 
     @Autowired
     private ClienteAtualizador atualizador;

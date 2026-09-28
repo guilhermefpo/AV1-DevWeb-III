@@ -2,9 +2,11 @@ package com.autobots.automanager.servicos;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.autobots.automanager.dtos.ClienteDTO;
 import com.autobots.automanager.dtos.ClienteRespostaDTO;
 import com.autobots.automanager.entidades.Cliente;
@@ -46,6 +48,13 @@ public class ClienteServicos {
                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
         Cliente dadosNovos = modelMapper.map(novosDados, Cliente.class);
+
+        if (cliente.getDocumentos() != null) {
+            cliente.getDocumentos().forEach(d -> d.setId(null));
+        }
+        if (cliente.getTelefones() != null) {
+            cliente.getTelefones().forEach(t -> t.setId(null));
+        }
 
         atualizador.atualizar(cliente, dadosNovos);
 

@@ -34,18 +34,31 @@ git clone https://github.com/guilhermefpo/AV1-DevWeb-III.git
 ### 2. Acessar a pasta do projeto
 
 ```bash
-cd automanager
+cd AV1-DevWeb-III/automanager
 ```
 
 ### 3. Executar o projeto
 
-Inicie a aplicação Spring Boot utilizando o Maven Wrapper:
+Requisito: **Java 17**.
+
+**Windows:**
 
 ```bash
 .\mvnw.cmd spring-boot:run
 ```
 
-Após a inicialização, aguarde até que a aplicação esteja disponível para receber requisições.
+**Linux / macOS:**
+
+```bash
+bash mvnw spring-boot:run
+```
+
+Ou, para poder usar `./mvnw` diretamente:
+
+```bash
+chmod +x mvnw
+./mvnw spring-boot:run
+```
 
 ### 4. Utilizar a API
 
@@ -67,7 +80,7 @@ O significado do `{id}` na URL **muda de acordo com a operação**:
 | `PUT` / `DELETE` de documento, endereço ou telefone        | O **ID do próprio recurso**                                                                  |
 | `PUT /cliente/{id}`                                        | O **ID do cliente** — os IDs dentro do JSON identificam os recursos relacionados a atualizar |
 
-Nos cadastros (`POST`), **não é necessário informar o `id` no corpo do JSON**.
+Nos cadastros (`POST`), **não é necessário informar o `id` no corpo do JSON**. Se enviado, ele é ignorado.
 
 ---
 
@@ -91,13 +104,26 @@ O cliente é o recurso principal do sistema. Documentos, endereço e telefones s
 ```json
 {
   "nome": "João da Silva",
+  "cpf": "12345678901",
   "nomeSocial": "João",
   "dataNascimento": "1990-05-15T00:00:00.000+00:00",
-  "dataCadastro": "2026-08-24T00:00:00.000+00:00"
+  "dataCadastro": "2026-08-24T00:00:00.000+00:00",
+  "endereco": {
+    "estado": "SP",
+    "cidade": "São José dos Campos",
+    "bairro": "Centro",
+    "rua": "Avenida Central",
+    "numero": "123",
+    "codigoPostal": "12200-000"
+  },
+  "documentos": [{ "tipo": "RG", "numero": "123456789" }],
+  "telefones": [{ "ddd": "12", "numero": "999998888" }]
 }
 ```
 
-Não é necessário informar `id` no cadastro do cliente.
+Campos obrigatórios: `nome`, `cpf` (11 dígitos) e `dataCadastro`. Endereço, documentos e telefones são opcionais, mas, se enviados, os campos obrigatórios deles também são validados (veja "Regras de validação").
+
+Não é necessário informar `id` no cadastro. Se enviado, é ignorado.
 
 </details>
 
@@ -111,7 +137,6 @@ O `{id}` da URL é o ID do cliente que será atualizado. Essa operação permite
   "nome": "João da Silva Atualizado",
   "nomeSocial": "João Atualizado",
   "dataNascimento": "1991-06-20T00:00:00.000+00:00",
-  "dataCadastro": "2026-08-24T00:00:00.000+00:00",
   "endereco": {
     "id": 2,
     "estado": "RJ",
@@ -125,8 +150,8 @@ O `{id}` da URL é o ID do cliente que será atualizado. Essa operação permite
   "documentos": [
     {
       "id": 3,
-      "tipo": "CPF",
-      "numero": "98765432100"
+      "tipo": "RG",
+      "numero": "987654321"
     }
   ],
   "telefones": [
@@ -138,6 +163,12 @@ O `{id}` da URL é o ID do cliente que será atualizado. Essa operação permite
   ]
 }
 ```
+
+Regras do `PUT /cliente/{id}`:
+
+- Todos os campos são opcionais; só os informados são alterados.
+- **O CPF não pode ser alterado.** Se o `cpf` for enviado com valor diferente do atual, a API retorna `400`.
+- Telefones e documentos são atualizados pelo `id` informado no JSON. O `id` deve pertencer ao cliente.
 
 > **Importante:** no `PUT /cliente/{id}`, o `{id}` da URL identifica o cliente. Já os `id` dentro do JSON identificam os recursos relacionados que serão atualizados.
 
@@ -168,8 +199,8 @@ POST /documento/2
 
 ```json
 {
-  "tipo": "CPF",
-  "numero": "12345678901"
+  "tipo": "RG",
+  "numero": "123456789"
 }
 ```
 
@@ -188,10 +219,12 @@ PUT /documento/3
 
 ```json
 {
-  "tipo": "CPF",
-  "numero": "98765432100"
+  "tipo": "RG",
+  "numero": "987654321"
 }
 ```
+
+Atualização parcial: só os campos enviados são alterados.
 
 </details>
 
@@ -230,7 +263,7 @@ POST /endereco/2
 }
 ```
 
-Não é necessário informar o `id` do endereço no JSON.
+Campos obrigatórios: `cidade`, `rua` e `numero`. Não é necessário informar o `id` do endereço no JSON.
 
 </details>
 
@@ -254,6 +287,8 @@ PUT /endereco/2
   "informacoesAdicionais": "Bloco B, Apto 12"
 }
 ```
+
+Atualização parcial: só os campos enviados são alterados.
 
 </details>
 
@@ -307,7 +342,32 @@ PUT /telefone/2
 }
 ```
 
+Atualização parcial: só os campos enviados são alterados. O número não pode repetir o de outro telefone já cadastrado.
+
 </details>
+
+---
+
+## Regras de validação
+
+| Recurso   | Campo                     | Regra                                                            |
+| :-------- | :------------------------ | :--------------------------------------------------------------- |
+| Cliente   | `nome`                    | Obrigatório                                                      |
+| Cliente   | `cpf`                     | Obrigatório, exatamente 11 números, único, não pode ser alterado |
+| Cliente   | `dataCadastro`            | Obrigatório no cadastro                                          |
+| Endereço  | `cidade`, `rua`, `numero` | Obrigatórios                                                     |
+| Endereço  | `codigoPostal`            | Opcional                                                         |
+| Telefone  | `ddd`                     | Obrigatório, exatamente 2 números                                |
+| Telefone  | `numero`                  | Obrigatório, único (não pode repetir, mesmo com outro DDD)       |
+| Documento | `numero`                  | Obrigatório, único                                               |
+
+## Códigos de erro
+
+| Status | Quando acontece                                                                             |
+| :----: | :------------------------------------------------------------------------------------------ |
+| `400`  | Campo obrigatório ausente ou inválido, JSON inválido, ID inválido, tentativa de alterar CPF |
+| `404`  | Cliente, documento, endereço ou telefone não encontrado                                     |
+| `409`  | CPF, telefone ou documento já cadastrado                                                    |
 
 ---
 

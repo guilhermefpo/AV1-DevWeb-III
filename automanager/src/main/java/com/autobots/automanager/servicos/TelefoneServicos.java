@@ -1,6 +1,7 @@
 package com.autobots.automanager.servicos;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -60,6 +61,15 @@ public class TelefoneServicos {
                 Telefone telefone = repositorio.findById(id)
                                 .orElseThrow(() -> new TelefoneNaoEncontradoException(id));
 
+                if (novosDados.getNumero() != null
+                                && !novosDados.getNumero().equals(telefone.getNumero())
+                                && repositorio.existsByNumeroAndIdNot(
+                                                novosDados.getNumero(), id)) {
+
+                        throw new TelefoneJaCadastradoException(
+                                        "Já existe um telefone cadastrado com esse número.");
+                }
+
                 Telefone dadosNovos = modelMapper.map(
                                 novosDados,
                                 Telefone.class);
@@ -88,13 +98,23 @@ public class TelefoneServicos {
                 Telefone telefone = modelMapper.map(
                                 novoTelefone,
                                 Telefone.class);
+                telefone.setId(null);
+
+                Set<Long> idsAntigos = cliente.getTelefones().stream()
+                                .map(Telefone::getId)
+                                .collect(Collectors.toSet());
 
                 cliente.getTelefones().add(telefone);
 
-                clienteRepositorio.save(cliente);
+                Cliente clienteSalvo = clienteRepositorio.save(cliente);
+
+                Telefone telefoneSalvo = clienteSalvo.getTelefones().stream()
+                                .filter(t -> t.getId() != null && !idsAntigos.contains(t.getId()))
+                                .findFirst()
+                                .orElseThrow();
 
                 return modelMapper.map(
-                                telefone,
+                                telefoneSalvo,
                                 TelefoneRespostaDTO.class);
         }
 

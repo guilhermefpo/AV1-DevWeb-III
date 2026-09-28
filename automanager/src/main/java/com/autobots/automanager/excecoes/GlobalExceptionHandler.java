@@ -194,6 +194,14 @@ public class GlobalExceptionHandler {
                                 .body(response);
         }
 
+        @ExceptionHandler(CpfImutavelException.class)
+        public ResponseEntity<ErrorResponse> handleCpfImutavel(CpfImutavelException ex) {
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+
         public record ErrorResponse(String message, int status) {
         }
+
 }

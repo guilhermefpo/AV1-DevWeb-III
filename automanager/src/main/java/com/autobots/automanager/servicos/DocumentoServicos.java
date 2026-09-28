@@ -1,6 +1,7 @@
 package com.autobots.automanager.servicos;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -73,7 +74,6 @@ public class DocumentoServicos {
                         DocumentoDTO novoDocumento,
                         Long id) {
 
-                @SuppressWarnings("null")
                 Cliente cliente = clienteRepositorio.findById(id)
                                 .orElseThrow(() -> new ClienteNaoEncontradoException(id));
 
@@ -85,13 +85,23 @@ public class DocumentoServicos {
                 Documento documento = modelMapper.map(
                                 novoDocumento,
                                 Documento.class);
+                documento.setId(null);
+
+                Set<Long> idsAntigos = cliente.getDocumentos().stream()
+                                .map(Documento::getId)
+                                .collect(Collectors.toSet());
 
                 cliente.getDocumentos().add(documento);
 
-                clienteRepositorio.save(cliente);
+                Cliente clienteSalvo = clienteRepositorio.save(cliente);
+
+                Documento documentoSalvo = clienteSalvo.getDocumentos().stream()
+                                .filter(d -> d.getId() != null && !idsAntigos.contains(d.getId()))
+                                .findFirst()
+                                .orElseThrow();
 
                 return modelMapper.map(
-                                documento,
+                                documentoSalvo,
                                 DocumentoRespostaDTO.class);
         }
 

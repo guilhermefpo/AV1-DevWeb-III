@@ -3,6 +3,7 @@ package com.autobots.automanager.modelo;
 import org.springframework.stereotype.Component;
 
 import com.autobots.automanager.entidades.Cliente;
+import com.autobots.automanager.excecoes.CpfImutavelException;
 
 @Component
 public class ClienteAtualizador {
@@ -27,6 +28,11 @@ public class ClienteAtualizador {
 	}
 
 	public void atualizar(Cliente cliente, Cliente atualizacao) {
+		if (atualizacao.getCpf() != null
+				&& !atualizacao.getCpf().equals(cliente.getCpf())) {
+			throw new CpfImutavelException();
+		}
+
 		atualizarDados(cliente, atualizacao);
 
 		if (atualizacao.getEndereco() != null && cliente.getEndereco() != null) {

@@ -8,4 +8,5 @@ public interface TelefoneRepositorio extends JpaRepository<Telefone, Long> {
 
     boolean existsByNumero(String numero);
 
+    boolean existsByNumeroAndIdNot(String numero, Long id);
 }

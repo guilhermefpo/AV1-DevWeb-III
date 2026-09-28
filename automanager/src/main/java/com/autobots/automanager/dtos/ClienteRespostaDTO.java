@@ -15,7 +15,7 @@ public class ClienteRespostaDTO {
     private Date dataNascimento;
     private Date dataCadastro;
 
-    private EnderecoDTO endereco;
-    private List<DocumentoDTO> documentos;
-    private List<TelefoneDTO> telefones;
+    private EnderecoRespostaDTO endereco;
+    private List<DocumentoRespostaDTO> documentos;
+    private List<TelefoneRespostaDTO> telefones;
 }
